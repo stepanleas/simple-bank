@@ -3,6 +3,8 @@ services:
   postgres:
     container_name: simple_bank_postgres
     image: postgres:17-alpine
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=secret
