@@ -112,7 +112,7 @@ func TestCreateUserAPI(t *testing.T) {
 				require.NoError(t, err)
 				require.NotNil(t, resp)
 
-				createdUser := resp.User
+				createdUser := resp.GetUser()
 				require.Equal(t, user.Username, createdUser.Username)
 				require.Equal(t, user.FullName, createdUser.FullName)
 				require.Equal(t, user.Email, createdUser.Email)
