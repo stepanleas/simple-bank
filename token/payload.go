@@ -17,11 +17,29 @@ var (
 type Payload struct {
 	ID        uuid.UUID        `json:"id"`
 	Username  string           `json:"username"`
+	Role      string           `json:"role"`
 	IssuedAt  time.Time        `json:"issued_at"`
 	ExpiredAt time.Time        `json:"expired_at"`
 	Issuer    string           `json:"issuer,omitempty"`
 	Subject   string           `json:"subject,omitempty"`
 	Audience  jwt.ClaimStrings `json:"audience,omitempty"`
+}
+
+func NewPayload(username, role string, duration time.Duration) (*Payload, error) {
+	tokenID, err := uuid.NewRandom()
+	if err != nil {
+		return nil, err
+	}
+
+	payload := &Payload{
+		ID:        tokenID,
+		Username:  username,
+		Role:      role,
+		IssuedAt:  time.Now(),
+		ExpiredAt: time.Now().Add(duration),
+	}
+
+	return payload, nil
 }
 
 func (payload *Payload) Valid() error {
@@ -54,20 +72,4 @@ func (payload *Payload) GetSubject() (string, error) {
 
 func (payload *Payload) GetAudience() (jwt.ClaimStrings, error) {
 	return payload.Audience, nil
-}
-
-func NewPayload(username string, duration time.Duration) (*Payload, error) {
-	tokenID, err := uuid.NewRandom()
-	if err != nil {
-		return nil, err
-	}
-
-	payload := &Payload{
-		ID:        tokenID,
-		Username:  username,
-		IssuedAt:  time.Now(),
-		ExpiredAt: time.Now().Add(duration),
-	}
-
-	return payload, nil
 }
